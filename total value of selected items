@@ -1,0 +1,38 @@
+import itertools
+
+def total_value(items, values):
+    """ Calculate the total value of selected items """
+    total = 0
+    for item in items:
+        total += values[item]
+    return total
+
+def is_feasible(items, weights, capacity):
+    """ Check if selected items do not exceed the knapsack capacity """
+    total_weight = sum(weights[item] for item in items)
+    return total_weight <= capacity
+
+def exhaustive_search_knapsack(weights, values, capacity):
+    num_items = len(weights)
+    best_value = 0
+    best_subset = []
+
+    # Generate all subsets of items
+    for r in range(num_items + 1):
+        for subset in itertools.combinations(range(num_items), r):
+            if is_feasible(subset, weights, capacity):
+                subset_value = total_value(subset, values)
+                if subset_value > best_value:
+                    best_value = subset_value
+                    best_subset = subset
+
+    return best_subset, best_value
+
+# Example usage:
+weights = [2, 3, 4, 5]
+values = [3, 4, 5, 6]
+capacity = 8
+
+best_subset, best_value = exhaustive_search_knapsack(weights, values, capacity)
+print("Best Subset of Items:", best_subset)
+print("Maximum Value:", best_value)
